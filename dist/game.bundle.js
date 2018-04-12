@@ -10369,20 +10369,15 @@ const $ = require('jquery')
 
 class Game {
     constructor() {
-        this.text = null
+        this.paragraph = null
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
         this.wordInput.on('input', this.valueChange)
     }
 
     setText(rawText) {
-        this.text = rawText
-        
-        const textTokens = this.text.split(' ')
-        textTokens.forEach((token) => {
-            const word = new Word(token)
-            this.textContainer.append(word.getElement$())
-        })
+        this.paragraph = new Paragraph(rawText)
+        this.paragraph.renderTextToElement(this.textContainer)
     }
 
     get valueChange() {
@@ -10390,6 +10385,26 @@ class Game {
         return () => {
             console.log(thisRef.wordInput.val())
         }
+    }
+}
+
+class Paragraph {
+    constructor(text) {
+        this.text = text
+        this.words = []
+        this.currentWord = null
+
+        this.text.split(' ').forEach((token) => {
+            this.words.push(new Word(token))
+        })
+
+        this.currentWord = this.words[0]
+    }
+
+    renderTextToElement($element) {
+        this.words.forEach((word) => {
+            $element.append(word.getElement$())
+        })
     }
 }
 
