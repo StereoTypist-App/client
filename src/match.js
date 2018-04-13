@@ -4,7 +4,11 @@ const $ = require('jquery')
 const connection = new MatchConnection()
 
 $(document).ready(() => {
-    connection.joinMatch('1234')
+    connection.joinMatch('1234',(data) => {
+        console.log("Match Done",data)
+    },(data) => {
+        console.log("Received data",data)
+    })
     setTimeout(() => {
         connection.startMatch()
     },10000)
