@@ -1,4 +1,6 @@
 const $ = require('jquery')
+const Texts = require('./texts')
+const exampleTexts = new Texts()
 
 class Game {
     constructor() {
@@ -40,7 +42,7 @@ class Game {
 
                 // Update text
                 if (!next) {
-                    thisRef.setText('new paragraph text')
+                    thisRef.setText(exampleTexts.getText())
                 } else {
                     next.startClock()
                 }
@@ -160,6 +162,6 @@ class Word {
 
 $(document).ready(() => {
     const game = new Game()
-    game.setText('Lose eyes get fat shew.')
+    game.setText(exampleTexts.getText())
     game.start()
 })
