@@ -1,4 +1,5 @@
 const $ = require('jquery')
+const Queue = require('./queue')
 
 class Game {
     constructor() {
@@ -16,7 +17,15 @@ class Game {
     get valueChange() {
         const thisRef = this
         return () => {
-            console.log(thisRef.wordInput.val())
+            if (thisRef.paragraph.checkWord(thisRef.wordInput.val())) {
+                const next = thisRef.paragraph.nextWord()
+                thisRef.wordInput.val(null)
+
+                if (!next) {
+                    this.paragraph = new Paragraph('new paragraph text')
+                    this.paragraph.renderTextToElement(this.textContainer)
+                }
+            }
         }
     }
 }
@@ -25,19 +34,37 @@ class Paragraph {
     constructor(text) {
         this.text = text
         this.words = []
+        this.wordsStack = null
         this.currentWord = null
 
         this.text.split(' ').forEach((token) => {
             this.words.push(new Word(token))
         })
 
-        this.currentWord = this.words[0]
+        this.wordsStack = [].concat(this.words).reverse()
+        this.currentWord = this.wordsStack.pop()
     }
 
     renderTextToElement($element) {
+        $element.empty()
         this.words.forEach((word) => {
             $element.append(word.getElement$())
         })
+    }
+
+    checkWord(text) {
+        if(text.trim() === this.currentWord.toString()) {
+            this.currentWord.correct()
+            return true
+        } else {
+            this.currentWord.incorrect()
+            return false
+        }
+    }
+
+    nextWord() {
+        this.currentWord = this.wordsStack.pop()
+        return this.currentWord
     }
 }
 
@@ -56,11 +83,21 @@ class Word {
     }
 
     toString() {
-        return this.text
+        return this.text.trim()
+    }
+
+    incorrect(diff) {
+        console.log('incorrect')
+        this.wordElement.css({ 'background-color': 'rgba(244,67,54,0.5)' })
+    }
+
+    correct() {
+        console.log('correct')
+        this.wordElement.css({ 'background-color': 'rgba(76,175,80,0.5)' })
     }
 }
 
 $(document).ready(() => {
     const game = new Game()
-    game.setText('Lose eyes get fat shew. Winter can indeed letter oppose way change tended now. So is improve my charmed picture exposed adapted demands. Received had end produced prepared diverted strictly off man branched. Known ye money so large decay voice there to. Preserved be mr cordially incommode as an. He doors quick child an point at. Had share vexed front least style off why him.')
+    game.setText('Lose eyes get fat shew.')
 })

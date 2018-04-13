@@ -10366,6 +10366,7 @@ return jQuery;
 
 },{}],2:[function(require,module,exports){
 const $ = require('jquery')
+const Queue = require('./queue')
 
 class Game {
     constructor() {
@@ -10383,7 +10384,15 @@ class Game {
     get valueChange() {
         const thisRef = this
         return () => {
-            console.log(thisRef.wordInput.val())
+            if (thisRef.paragraph.checkWord(thisRef.wordInput.val())) {
+                const next = thisRef.paragraph.nextWord()
+                thisRef.wordInput.val(null)
+
+                if (!next) {
+                    this.paragraph = new Paragraph('new paragraph text')
+                    this.paragraph.renderTextToElement(this.textContainer)
+                }
+            }
         }
     }
 }
@@ -10392,19 +10401,37 @@ class Paragraph {
     constructor(text) {
         this.text = text
         this.words = []
+        this.wordsStack = null
         this.currentWord = null
 
         this.text.split(' ').forEach((token) => {
             this.words.push(new Word(token))
         })
 
-        this.currentWord = this.words[0]
+        this.wordsStack = [].concat(this.words).reverse()
+        this.currentWord = this.wordsStack.pop()
     }
 
     renderTextToElement($element) {
+        $element.empty()
         this.words.forEach((word) => {
             $element.append(word.getElement$())
         })
+    }
+
+    checkWord(text) {
+        if(text.trim() === this.currentWord.toString()) {
+            this.currentWord.correct()
+            return true
+        } else {
+            this.currentWord.incorrect()
+            return false
+        }
+    }
+
+    nextWord() {
+        this.currentWord = this.wordsStack.pop()
+        return this.currentWord
     }
 }
 
@@ -10423,12 +10450,81 @@ class Word {
     }
 
     toString() {
-        return this.text
+        return this.text.trim()
+    }
+
+    incorrect(diff) {
+        console.log('incorrect')
+        this.wordElement.css({ 'background-color': 'rgba(244,67,54,0.5)' })
+    }
+
+    correct() {
+        console.log('correct')
+        this.wordElement.css({ 'background-color': 'rgba(76,175,80,0.5)' })
     }
 }
 
 $(document).ready(() => {
     const game = new Game()
-    game.setText('Lose eyes get fat shew. Winter can indeed letter oppose way change tended now. So is improve my charmed picture exposed adapted demands. Received had end produced prepared diverted strictly off man branched. Known ye money so large decay voice there to. Preserved be mr cordially incommode as an. He doors quick child an point at. Had share vexed front least style off why him.')
+    game.setText('Lose eyes get fat shew.')
 })
-},{"jquery":1}]},{},[2]);
+},{"./queue":3,"jquery":1}],3:[function(require,module,exports){
+module.exports = class Queue {
+
+    constructor(arr) {
+        this._data = {}
+        this._front = -1
+        this._back = -1
+
+        if(arr) {
+            arr.forEach((el) => {
+                this.enqueue(el)
+            })
+        }
+    }
+
+    enqueue(data) {
+        this._back += 1
+
+        if(this._front < 0) this._front = 0
+
+        this._data[this._back] = data
+    }
+
+    dequeue() {
+        const data = this._data[this._front]
+        delete this._data[this._front]
+
+        if(this._front === this._back || this._front === 0) {
+            this._front = -1
+            this._back = -1
+        } else {
+            this._front += 1
+        }
+
+        if(typeof data === "undefined") {
+            return null
+        }
+
+        return data
+    }
+
+    first() {
+        return this._data[this._front]
+    }
+
+    last() {
+        return this._data[this._back]
+    }
+
+    toArray() {
+        let els = []
+
+        for(let i = this._front; i <= this._back; i++) {
+            els.push(this._data[i])
+        }
+
+        return els
+    }
+}
+},{}]},{},[2]);
