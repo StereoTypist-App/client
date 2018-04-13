@@ -6,6 +6,7 @@ class MatchConnection {
     }
 
     joinMatch(matchId) {
+        this.matchId = matchId
         this.channel = this.cable.subscriptions.create({channel: "MatchChannel", match_id: matchId },{
             connected: () => {
                 console.log("Cable Connected")
@@ -23,8 +24,13 @@ class MatchConnection {
     }
 
     sendWPM(wpm) {
-        this.channel.send({wpm: wpm})
+        this.channel.send({wpm: wpm, match_id: this.matchId})
         console.log("Sent " + wpm + " wpm")
+    }
+
+    startMatch() {
+        this.channel.send({start: true, match_id: this.matchId})
+        console.log("Sent start match")
     }
 }
 
