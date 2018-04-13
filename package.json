@@ -6,6 +6,7 @@
   "author": "Andrew Arpasi, Vishnu Vijayan, Aung Myat",
   "license": "MIT",
   "dependencies": {
+    "actioncable": "^5.2.0",
     "firebase": "^4.12.1",
     "jquery": "^3.3.1",
     "rivets": "^0.9.6"
