@@ -10371,6 +10371,7 @@ const Queue = require('./queue')
 class Game {
     constructor() {
         this.paragraph = null
+        this.numCorrect = 0
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
         this.wordInput.on('input', this.valueChange)
@@ -10379,18 +10380,25 @@ class Game {
     setText(rawText) {
         this.paragraph = new Paragraph(rawText)
         this.paragraph.renderTextToElement(this.textContainer)
+        this.paragraph.currentWord.startClock()
     }
 
     get valueChange() {
         const thisRef = this
         return () => {
             if (thisRef.paragraph.checkWord(thisRef.wordInput.val())) {
+                // Word is correct
+                thisRef.numCorrect += 1
+                console.log(thisRef.paragraph.currentWord.completionTime + ' ms')
+
                 const next = thisRef.paragraph.nextWord()
                 thisRef.wordInput.val(null)
 
+                // Update text
                 if (!next) {
-                    this.paragraph = new Paragraph('new paragraph text')
-                    this.paragraph.renderTextToElement(this.textContainer)
+                    thisRef.setText('new paragraph text')
+                } else {
+                    next.startClock()
                 }
             }
         }
@@ -10421,10 +10429,11 @@ class Paragraph {
 
     checkWord(text) {
         if (text.trim() === this.currentWord.toString()) {
-            this.currentWord.correct()
+            this.currentWord.endClock()
+            this.currentWord.showCorrect()
             return true
         } else {
-            this.currentWord.incorrect(text)
+            this.currentWord.showIncorrect(text)
             return false
         }
     }
@@ -10439,6 +10448,8 @@ class Word {
     constructor(wordText) {
         this.text = wordText.trim()
         this.letterMap$ = []
+        this.startTime = null
+        this.completionTime = -1
 
         // Build element
         this.wordElement = $('<span>', {
@@ -10463,7 +10474,7 @@ class Word {
         return this.text
     }
 
-    incorrect(incorrectText) {
+    showIncorrect(incorrectText) {
         const text = incorrectText.trim()
 
         for (let key in this.letterMap$) {
@@ -10482,11 +10493,19 @@ class Word {
         this.wordElement.css({ 'background-color': 'rgba(244,67,54,0.5)' })
     }
 
-    correct() {
+    showCorrect() {
         for (let key in this.letterMap$) {
             this.letterMap$[key].css({ 'background-color': 'transparent' })
         }
         this.wordElement.css({ 'background-color': 'rgba(76,175,80,0.5)' })
+    }
+
+    startClock() {
+        this.startTime = Date.now()
+    }
+
+    endClock() {
+        this.completionTime = Date.now() - this.startTime
     }
 }
 
