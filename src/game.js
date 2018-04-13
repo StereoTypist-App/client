@@ -1,13 +1,24 @@
 const $ = require('jquery')
-const Queue = require('./queue')
 
 class Game {
     constructor() {
         this.paragraph = null
         this.numCorrect = 0
+        this._wpm = 0
+        this.startTime = -1
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
         this.wordInput.on('input', this.valueChange)
+    }
+
+    start() {
+        this.startTime = Date.now()
+
+        // Update WPM
+        const thisRef = this
+        setInterval(() => {
+            $('#wpm').text(thisRef.WPM.toFixed(2))
+        }, 1000)
     }
 
     setText(rawText) {
@@ -22,7 +33,7 @@ class Game {
             if (thisRef.paragraph.checkWord(thisRef.wordInput.val())) {
                 // Word is correct
                 thisRef.numCorrect += 1
-                console.log(thisRef.paragraph.currentWord.completionTime + ' ms')
+                const completionTime = thisRef.paragraph.currentWord.completionTime / 1000
 
                 const next = thisRef.paragraph.nextWord()
                 thisRef.wordInput.val(null)
@@ -35,6 +46,11 @@ class Game {
                 }
             }
         }
+    }
+
+    get WPM() {
+        const timeElapsed = (Date.now() - this.startTime) / (1000 * 60)
+        return this.numCorrect / timeElapsed
     }
 }
 
@@ -145,4 +161,5 @@ class Word {
 $(document).ready(() => {
     const game = new Game()
     game.setText('Lose eyes get fat shew.')
+    game.start()
 })

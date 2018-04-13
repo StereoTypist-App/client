@@ -10366,15 +10366,26 @@ return jQuery;
 
 },{}],2:[function(require,module,exports){
 const $ = require('jquery')
-const Queue = require('./queue')
 
 class Game {
     constructor() {
         this.paragraph = null
         this.numCorrect = 0
+        this._wpm = 0
+        this.startTime = -1
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
         this.wordInput.on('input', this.valueChange)
+    }
+
+    start() {
+        this.startTime = Date.now()
+
+        // Update WPM
+        const thisRef = this
+        setInterval(() => {
+            $('#wpm').text(thisRef.WPM.toFixed(2))
+        }, 1000)
     }
 
     setText(rawText) {
@@ -10389,7 +10400,7 @@ class Game {
             if (thisRef.paragraph.checkWord(thisRef.wordInput.val())) {
                 // Word is correct
                 thisRef.numCorrect += 1
-                console.log(thisRef.paragraph.currentWord.completionTime + ' ms')
+                const completionTime = thisRef.paragraph.currentWord.completionTime / 1000
 
                 const next = thisRef.paragraph.nextWord()
                 thisRef.wordInput.val(null)
@@ -10402,6 +10413,11 @@ class Game {
                 }
             }
         }
+    }
+
+    get WPM() {
+        const timeElapsed = (Date.now() - this.startTime) / (1000 * 60)
+        return this.numCorrect / timeElapsed
     }
 }
 
@@ -10512,64 +10528,6 @@ class Word {
 $(document).ready(() => {
     const game = new Game()
     game.setText('Lose eyes get fat shew.')
+    game.start()
 })
-},{"./queue":3,"jquery":1}],3:[function(require,module,exports){
-module.exports = class Queue {
-
-    constructor(arr) {
-        this._data = {}
-        this._front = -1
-        this._back = -1
-
-        if(arr) {
-            arr.forEach((el) => {
-                this.enqueue(el)
-            })
-        }
-    }
-
-    enqueue(data) {
-        this._back += 1
-
-        if(this._front < 0) this._front = 0
-
-        this._data[this._back] = data
-    }
-
-    dequeue() {
-        const data = this._data[this._front]
-        delete this._data[this._front]
-
-        if(this._front === this._back || this._front === 0) {
-            this._front = -1
-            this._back = -1
-        } else {
-            this._front += 1
-        }
-
-        if(typeof data === "undefined") {
-            return null
-        }
-
-        return data
-    }
-
-    first() {
-        return this._data[this._front]
-    }
-
-    last() {
-        return this._data[this._back]
-    }
-
-    toArray() {
-        let els = []
-
-        for(let i = this._front; i <= this._back; i++) {
-            els.push(this._data[i])
-        }
-
-        return els
-    }
-}
-},{}]},{},[2]);
+},{"jquery":1}]},{},[2]);
