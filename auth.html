@@ -1,0 +1,50 @@
+<!-- Junk file, using rails now -->
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Log in / Register</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <h1>StereoTypist</h1>
+
+        <h3>Log In</h3>
+        <form>
+            <label>E-mail</label>
+            <input type="email" id="loginEmail">
+            <label>Password</label>
+            <input type="password" id="loginPassword">
+            <button id="loginBtn" type="button">Log in</button>
+        </form>
+
+        <h3>Don't have an account? Register!</h3>
+        <form>
+            <label>E-mail</label>
+            <input type="email" id="registerEmail">
+            <label>Password</label>
+            <input type="password" name="password" id="registerPassword">
+            <label>Display Name</label>
+            <input type="text" id="registerName">
+            <button id="registerBtn" type="button">Register</button>
+        </form>
+
+        <!-- <h3>Forgot your password?</h3>
+        <form>
+            <label>E-mail</label>
+            <input type="email" name="Email" id="resetEmail">
+            <button id="resetBtn" type="button">Reset</button>
+        </form> -->
+
+        <script src="dist/auth.bundle.js"></script>
+    </body>
+</html>
