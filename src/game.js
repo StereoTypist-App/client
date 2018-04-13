@@ -53,11 +53,11 @@ class Paragraph {
     }
 
     checkWord(text) {
-        if(text.trim() === this.currentWord.toString()) {
+        if (text.trim() === this.currentWord.toString()) {
             this.currentWord.correct()
             return true
         } else {
-            this.currentWord.incorrect()
+            this.currentWord.incorrect(text)
             return false
         }
     }
@@ -70,11 +70,21 @@ class Paragraph {
 
 class Word {
     constructor(wordText) {
-        this.text = wordText
+        this.text = wordText.trim()
+        this.letterMap$ = []
 
         // Build element
         this.wordElement = $('<span>', {
-            text: this.text.trim() + ' '
+            text: ' '
+        }).css({
+            'border-radius': '0.1em',
+            'padding': '3px'
+        })
+
+        this.text.split('').forEach((c, index) => {
+            const letter = $('<span>', { text: c })
+            this.letterMap$[c + index] = letter
+            this.wordElement.append(letter)
         })
     }
 
@@ -83,16 +93,32 @@ class Word {
     }
 
     toString() {
-        return this.text.trim()
+        return this.text
     }
 
-    incorrect(diff) {
-        console.log('incorrect')
+    incorrect(incorrectText) {
+        const text = incorrectText.trim()
+
+        for (let key in this.letterMap$) {
+            this.letterMap$[key].css({ 'background-color': 'transparent' })
+        }
+
+        if (this.text.startsWith(text)) {
+            text.split('').forEach((c, index) => {
+                const letter$ = this.letterMap$[c + index]
+                letter$.css({
+                    'background-color': 'rgba(244,67,54,0.5)',
+                    'border-radius': '0.1em'
+                })
+            })
+        }
         this.wordElement.css({ 'background-color': 'rgba(244,67,54,0.5)' })
     }
 
     correct() {
-        console.log('correct')
+        for (let key in this.letterMap$) {
+            this.letterMap$[key].css({ 'background-color': 'transparent' })
+        }
         this.wordElement.css({ 'background-color': 'rgba(76,175,80,0.5)' })
     }
 }
