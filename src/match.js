@@ -4,7 +4,9 @@ const $ = require('jquery')
 const connection = new MatchConnection()
 
 $(document).ready(() => {
-    connection.joinMatch('1234',(data) => {
+    connection.joinMatch('1234',() => {
+        console.log("Match Started")
+    },(data) => {
         console.log("Match Done",data)
     },(data) => {
         console.log("Received data",data)
