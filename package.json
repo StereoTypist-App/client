@@ -9,7 +9,9 @@
     "actioncable": "^5.2.0",
     "firebase": "^4.12.1",
     "jquery": "^3.3.1",
-    "rivets": "^0.9.6"
+    "query-string": "^6.0.0",
+    "rivets": "^0.9.6",
+    "shortid": "^2.2.8"
   },
   "scripts": {
     "bundle": "watchify js/app.js -o bundle.js"

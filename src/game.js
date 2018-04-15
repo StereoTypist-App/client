@@ -1,26 +1,39 @@
 const $ = require('jquery')
+const shortid = require('shortid')
+const queryString = require('query-string')
 const Texts = require('./texts')
+const MatchConnection = require('./models/match')
 const exampleTexts = new Texts()
 
 class Game {
-    constructor() {
+    constructor(connection) {
         this.paragraph = null
         this.numCorrect = 0
         this._wpm = 0
         this.startTime = -1
+        this.WPMInterval = -1
+        this.connection = connection
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
         this.wordInput.on('input', this.valueChange)
+        this.wordInput.prop('disabled', true)
     }
 
     start() {
         this.startTime = Date.now()
-
+        this.wordInput.prop('disabled', false)
+        this.wordInput.focus()
         // Update WPM
         const thisRef = this
-        setInterval(() => {
+        this.WPMInterval = setInterval(() => {
             $('#wpm').text(thisRef.WPM.toFixed(2))
+            this.connection.sendWPM(thisRef.WPM)
         }, 1000)
+    }
+
+    end() {
+        clearInterval(this.WPMInterval)
+        this.wordInput.prop('disabled', true)
     }
 
     setText(rawText) {
@@ -161,7 +174,37 @@ class Word {
 }
 
 $(document).ready(() => {
-    const game = new Game()
+    const url = 'http://localhost:3000/game.html'
+    const connection = new MatchConnection()
+    const game = new Game(connection)
+
+    $('#startButton').on('click', () => {
+        connection.startMatch()
+    })
+
     game.setText(exampleTexts.getText())
-    game.start()
+
+    const params = queryString.parse(location.search)
+    let uid = shortid.generate()
+
+    if(params.match) {
+        uid = params.match
+        $('#startButton').hide()
+    } else {
+        $('#gameUrl').text(url + '?match=' + uid)
+    }
+
+    console.log('UID', uid)
+    connection.joinMatch(uid, () => {
+        console.log("Match Started")
+        $('#startButton').hide()
+        $('#gameUrl').hide()
+        $('#lobby-row').hide()
+        game.start()
+    }, (data) => {
+        console.log("Match Done", data)
+        game.end()
+    }, (data) => {
+        console.log("Received data", data)
+    })
 })
