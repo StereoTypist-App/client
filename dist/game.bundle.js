@@ -11815,6 +11815,7 @@ $(document).ready(() => {
         console.log("Match Started")
         $('#startButton').hide()
         $('#gameUrl').hide()
+        $('#lobby-row').hide()
         game.start()
     }, (data) => {
         console.log("Match Done", data)
