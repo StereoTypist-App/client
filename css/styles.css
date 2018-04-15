@@ -1,3 +1,12 @@
-
+.st-button {
+  min-width: 100px;
+  background-color: #99A5CC;
+  padding: 10px;
+  border-radius: 0.2em;
+  border: 0 solid transparent;
+  transition: background-color 200ms ease-in-out; }
+  .st-button:hover {
+    cursor: pointer;
+    background-color: #BBDEFB; }
 
 /*# sourceMappingURL=styles.css.map */
