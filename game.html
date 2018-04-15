@@ -91,6 +91,33 @@
                         <button class="st-button" id="startButton">START</button>
                     </div>
                 </div>
+
+                <div class="row mt-4" id="rank-row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!--Table-->
+                            <table class="table">
+
+                                <!--Table head-->
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>WPM</th>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                                <!--Table head-->
+
+                                <!--Table body-->
+                                <tbody id="rank-table-body">
+                                </tbody>
+                                <!--Table body-->
+
+                            </table>
+                            <!--Table-->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -108,14 +135,14 @@
                         <div class="modal-body mx-3">
                             <div class="md-form mb-5">
                                 <i class="fa fa-envelope prefix grey-text"></i>
-                                <input type="email" name="user[email]" id="user_email" class="form-control validate">
-                                <label data-error="wrong" data-success="right" for="user_email">Your email</label>
+                                <input type="email" name="user[email]" id="user_email_login" class="form-control validate">
+                                <label data-error="wrong" data-success="right" for="user_email_login">Your email</label>
                             </div>
 
                             <div class="md-form mb-4">
                                 <i class="fa fa-lock prefix grey-text"></i>
-                                <input type="password" name="user[password]" id="user_password" class="form-control validate">
-                                <label data-error="wrong" data-success="right" for="user_password">Your password</label>
+                                <input type="password" name="user[password]" id="user_password_login" class="form-control validate">
+                                <label data-error="wrong" data-success="right" for="user_password_login">Your password</label>
                             </div>
 
                             <div class="md-form mb-4">

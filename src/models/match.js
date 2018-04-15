@@ -2,12 +2,14 @@ const ActionCable = require("actioncable")
 
 class MatchConnection {
     constructor() {
-        this.cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+        // const url = 'ws://localhost:3000/'
+        const url = 'ws://10.186.148.161:3000/'
+        this.cable = ActionCable.createConsumer(url + 'cable')
     }
 
-    joinMatch(matchId,startCallback,doneCallback,dataCallback) {
+    joinMatch(matchId, startCallback, doneCallback, dataCallback) {
         this.matchId = matchId
-        this.channel = this.cable.subscriptions.create({channel: "MatchChannel", match_id: matchId },{
+        this.channel = this.cable.subscriptions.create({ channel: "MatchChannel", match_id: matchId }, {
             connected: () => {
                 console.log("Cable Connected")
             },
@@ -15,12 +17,12 @@ class MatchConnection {
                 console.log("Cable Disconnected")
             },
             received: (data) => {
-                if(data.complete) {
+                if (data.complete) {
                     this.channel.unsubscribe()
                     return doneCallback(data)
                 }
-                if(data.started) {
-                    return startCallback()
+                if (data.started) {
+                    return startCallback(data)
                 }
                 dataCallback(data)
             },
@@ -31,12 +33,12 @@ class MatchConnection {
     }
 
     sendWPM(wpm) {
-        this.channel.send({wpm: wpm})
+        this.channel.send({ wpm: wpm })
         console.log("Sent " + wpm + " wpm")
     }
 
     startMatch() {
-        this.channel.send({start: true})
+        this.channel.send({ start: true })
         console.log("Sent start match")
     }
 }
