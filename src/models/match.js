@@ -5,7 +5,7 @@ class MatchConnection {
         this.cable = ActionCable.createConsumer('ws://localhost:3000/cable')
     }
 
-    joinMatch(matchId,doneCallback,dataCallback) {
+    joinMatch(matchId,startCallback,doneCallback,dataCallback) {
         this.matchId = matchId
         this.channel = this.cable.subscriptions.create({channel: "MatchChannel", match_id: matchId },{
             connected: () => {
@@ -18,6 +18,9 @@ class MatchConnection {
                 if(data.complete) {
                     this.channel.unsubscribe()
                     return doneCallback(data)
+                }
+                if(data.started) {
+                    return startCallback()
                 }
                 dataCallback(data)
             },
