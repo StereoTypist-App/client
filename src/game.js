@@ -174,6 +174,7 @@ class Word {
 }
 
 $(document).ready(() => {
+    const url = 'http://localhost:3000/game.html'
     const connection = new MatchConnection()
     const game = new Game(connection)
 
@@ -188,11 +189,16 @@ $(document).ready(() => {
 
     if(params.match) {
         uid = params.match
+        $('#startButton').hide()
+    } else {
+        $('#gameUrl').text(url + '?match=' + uid)
     }
-    
+
     console.log('UID', uid)
     connection.joinMatch(uid, () => {
         console.log("Match Started")
+        $('#startButton').hide()
+        $('#gameUrl').hide()
         game.start()
     }, (data) => {
         console.log("Match Done", data)

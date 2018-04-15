@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,eAAgB;EACZ,MAAM,EAAE,KAAK;EACb,gBAAgB,EAAE,KAAK",
+"mappings": "AAAA,eAAgB;EACZ,MAAM,EAAE,KAAK;EACb,gBAAgB,EAAE,OAAO;;AAG7B,WAAY;EACR,KAAK,EAAE,OAAO;;AAGlB,WAAY;EACR,SAAS,EAAE,IAAI;EACf,WAAW,EAAE,GAAG",
 "sources": ["../scss/game.scss"],
 "names": [],
 "file": "game.css"

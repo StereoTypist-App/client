@@ -1,5 +1,12 @@
-.main-container {
+.game-container {
   height: 100vh;
-  background-color: black; }
+  background-color: #1F2B5E; }
+
+.light-text {
+  color: #99A5CC; }
+
+#promptText {
+  font-size: 20px;
+  font-weight: 400; }
 
 /*# sourceMappingURL=game.css.map */
