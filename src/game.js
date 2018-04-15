@@ -1,5 +1,6 @@
 const $ = require('jquery')
 const shortid = require('shortid')
+const queryString = require('query-string')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
 const exampleTexts = new Texts()
@@ -182,7 +183,13 @@ $(document).ready(() => {
 
     game.setText(exampleTexts.getText())
 
-    const uid = shortid.generate()
+    const params = queryString.parse(location.search)
+    let uid = shortid.generate()
+
+    if(params.match) {
+        uid = params.match
+    }
+    
     console.log('UID', uid)
     connection.joinMatch(uid, () => {
         console.log("Match Started")
