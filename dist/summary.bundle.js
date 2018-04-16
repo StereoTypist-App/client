@@ -10371,7 +10371,7 @@ const $ = require('jquery')
 
 class Chart {
     
-    constructor() {
+    constructor(users) {
         this.option = {
             width: '450px',
             height: '450px',
@@ -10381,28 +10381,28 @@ class Chart {
             startAngle: 270,
             showLabel: true
         }
+        this.users = users
         this.data = {
             // to display the same portion for each user in chart
-            labels: [],
+            labels: this.users,
             series: [1, 1, 1, 1]
           }
         this.chart = new Chartist.Pie('.ct-chart', this.data, this.option);
     }
 
     updateChart(usersInfo, wpm){
+        
         this.newUsers = []
         this.newSeries = []
-        // for (userInfo of usersInfo) {
-        //     this.newUsers.push(userInfo.name);
-        //     this.newSeries.push(userInfo.wpm);
-        // }
         usersInfo.forEach(element => {
             this.newUsers.push(element.name);
             this.newSeries.push(element.wpm);
         });
         this.chart.update({labels: this.newUsers,
-                        series: this.newSeries})
+                           series: this.newSeries
+        })
     }
+
 }
 
 module.exports = Chart
@@ -10414,7 +10414,9 @@ module.exports = Chart
 const Chart = require('./models/chart')
 const $ = require('jquery')
 
-const chart = new Chart()
+let users = ['bob', 'amy', 'andy', 'zet']
+
+const chart = new Chart(users)
 
 $(document).ready(() => {
    

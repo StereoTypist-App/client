@@ -2,7 +2,9 @@
 const Chart = require('./models/chart')
 const $ = require('jquery')
 
-const chart = new Chart()
+let users = ['bob', 'amy', 'andy', 'zet']
+
+const chart = new Chart(users)
 
 $(document).ready(() => {
    
