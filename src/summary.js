@@ -1,23 +1,19 @@
 
+const Chart = require('./models/chart')
 const $ = require('jquery')
 
+const chart = new Chart()
 
 $(document).ready(() => {
    
-	chart = new Chartist.Pie('.ct-chart', {
-		series: [20, 10, 30, 40]
-	  }, {
-		donut: true,
-		donutWidth: 60,
-		donutSolid: true,
-		startAngle: 270,
-		showLabel: true
-	  });
+	
 	 
-	  newSeries = [50,20,10,20]
+
+	  let newSeries = [{ name: 'user1', wpm: 50},
+	  { name: 'user2', wpm: 40},{ name: 'user3', wpm: 30},{ name: 'user4', wpm: 10}]
 	  setTimeout(()=>{
-		chart.update({series: newSeries})
-	  },5000)
+		chart.updateChart(newSeries,55)
+	  },2000)
 })
 
 
