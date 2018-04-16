@@ -10365,22 +10365,28 @@ return jQuery;
 } );
 
 },{}],2:[function(require,module,exports){
+
 const $ = require('jquery')
 
+
 $(document).ready(() => {
-
-    new Chartist.Pie('.ct-chart', {
-        labels: ['a', 'b', 'c', 'd'],
-        series: [20, 10, 35, 40]
-      }, {
-        donut: true,
-        donutWidth: 60,
-        donutSolid: true,
-        startAngle: 270,
-        showLabel: true
-      });
-      
-
-    console.log('hi');
+   
+	chart = new Chartist.Pie('.ct-chart', {
+		series: [20, 10, 30, 40]
+	  }, {
+		donut: true,
+		donutWidth: 60,
+		donutSolid: true,
+		startAngle: 270,
+		showLabel: true
+	  });
+	 
+	  newSeries = [50,20,10,20]
+	  setTimeout(()=>{
+		chart.update({series: newSeries})
+	  },5000)
 })
+
+
+
 },{"jquery":1}]},{},[2]);
