@@ -42,6 +42,43 @@ class Game {
         this.paragraph.currentWord.startClock()
     }
 
+    updateTable(data) {
+        const tbody = $('#rank-table-body')
+        tbody.empty()
+
+        const results = data.result
+        let users = []
+
+        for (let user in results) {
+            if (user === "active") continue
+            const userWPM = results[user]
+            users.push({
+                name: user,
+                wpm: userWPM
+            })
+        }
+
+        users.sort((a, b) => {
+            if (a.wpm > b.wpm)
+                return -1
+            if (a.wpm < b.wpm)
+                return 1
+            return 0
+        })
+
+        users.forEach((user, index) => {
+            const trow = $(`
+                <tr>
+                    <th scope="row">${index + 1}</th>
+                    <td>${user.wpm}</td>
+                    <td>${user.name}</td>
+                </tr>
+            `)
+
+            tbody.append(trow)
+        })
+    }
+
     get valueChange() {
         const thisRef = this
         return () => {
@@ -178,6 +215,8 @@ $(document).ready(() => {
     const connection = new MatchConnection()
     const game = new Game(connection)
 
+    $('#rank-row').hide()
+
     $('#startButton').on('click', () => {
         connection.startMatch()
     })
@@ -187,7 +226,7 @@ $(document).ready(() => {
     const params = queryString.parse(location.search)
     let uid = shortid.generate()
 
-    if(params.match) {
+    if (params.match) {
         uid = params.match
         $('#startButton').hide()
     } else {
@@ -195,16 +234,19 @@ $(document).ready(() => {
     }
 
     console.log('UID', uid)
-    connection.joinMatch(uid, () => {
+    connection.joinMatch(uid, (data) => {
+        console.log(data)
         console.log("Match Started")
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
+        $('#rank-row').show()
         game.start()
     }, (data) => {
-        console.log("Match Done", data)
+        console.log("Match Done")
+        game.updateTable(data)
         game.end()
     }, (data) => {
-        console.log("Received data", data)
+        game.updateTable(data)
     })
 })
