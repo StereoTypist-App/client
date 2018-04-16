@@ -3,7 +3,6 @@ const shortid = require('shortid')
 const queryString = require('query-string')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
-const exampleTexts = new Texts()
 
 class Game {
     constructor(connection) {
@@ -57,6 +56,8 @@ class Game {
                 wpm: userWPM
             })
         }
+
+        console.log(users)
 
         users.sort((a, b) => {
             if (a.wpm > b.wpm)
@@ -221,7 +222,7 @@ $(document).ready(() => {
         connection.startMatch()
     })
 
-    game.setText(exampleTexts.getText())
+    $('#promptTitle').text("Click start to begin the game")
 
     const params = queryString.parse(location.search)
     let uid = shortid.generate()
@@ -229,19 +230,23 @@ $(document).ready(() => {
     if (params.match) {
         uid = params.match
         $('#startButton').hide()
+        $('#promptTitle').text("Waiting for host to start the game...")
     } else {
         $('#gameUrl').text(url + '?match=' + uid)
     }
 
     console.log('UID', uid)
+    let texts = null
     connection.joinMatch(uid, (data) => {
-        console.log(data)
+        texts = new Texts(data.texts)
         console.log("Match Started")
+        $('#promptTitle').text("Type this text:")
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
         $('#rank-row').show()
         game.start()
+        game.setText(texts.getText())
     }, (data) => {
         console.log("Match Done")
         game.updateTable(data)
