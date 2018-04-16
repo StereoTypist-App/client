@@ -3,6 +3,7 @@ const shortid = require('shortid')
 const queryString = require('query-string')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
+const Chart = require('./models/chart')
 
 class Game {
     constructor(connection) {
@@ -11,6 +12,7 @@ class Game {
         this._wpm = 0
         this.startTime = -1
         this.WPMInterval = -1
+        this.chart = null
         this.connection = connection
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
@@ -25,7 +27,7 @@ class Game {
         // Update WPM
         const thisRef = this
         this.WPMInterval = setInterval(() => {
-            $('#wpm').text(thisRef.WPM.toFixed(2))
+            $('#wpm').text('WPM: ' + thisRef.WPM.toFixed(2))
             this.connection.sendWPM(thisRef.WPM)
         }, 1000)
     }
@@ -66,6 +68,13 @@ class Game {
                 return 1
             return 0
         })
+
+        if(!this.chart) {
+            this.chart = new Chart(users)
+        }
+
+        users.push({name: 'boot hunter', wpm: 30})
+        this.chart.updateChart(users, this.WPM)
 
         users.forEach((user, index) => {
             const trow = $(`
@@ -244,7 +253,7 @@ $(document).ready(() => {
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
-        $('#rank-row').show()
+        // $('#rank-row').show()
         game.start()
         game.setText(texts.getText())
     }, (data) => {
