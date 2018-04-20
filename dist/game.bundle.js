@@ -11644,7 +11644,7 @@ class Game {
         const thisRef = this
         this.WPMInterval = setInterval(() => {
             $('#wpm').text(thisRef.WPM.toFixed(2) + ' wpm')
-            this.connection.sendWPM(thisRef.WPM)
+            this.connection.sendWPM(thisRef.WPM.toFixed(2))
         }, 1000)
     }
 
