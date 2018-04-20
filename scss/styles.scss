@@ -19,9 +19,14 @@
     }
 }
 
+.st-button-lg {
+    min-width: 150px;
+    padding: 15px;
+}
+
 .st-card {
     border-radius: 0.1em;
-    box-shadow: 0 1rem 8rem rgba( #000, .33 );
+    box-shadow: 0 1rem 8rem rgba( #000, .33);
 }
 
 .ct-chart {
@@ -71,4 +76,11 @@
 .mx-auto {
     margin-left: auto;
     margin-right: auto;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+    .res-table {
+        display: block;
+        overflow-x: auto;
+    }
 }
