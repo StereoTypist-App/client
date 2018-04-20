@@ -10,7 +10,8 @@
   padding: 10px;
   border-radius: 0.2em;
   border: 0 solid transparent;
-  transition: background-color 200ms ease-in-out; }
+  transition: background-color 200ms ease-in-out;
+  font-weight: 500; }
   .st-button:hover {
     cursor: pointer;
     background-color: #BBDEFB; }
