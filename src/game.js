@@ -27,7 +27,7 @@ class Game {
         // Update WPM
         const thisRef = this
         this.WPMInterval = setInterval(() => {
-            $('#wpm').text('WPM: ' + thisRef.WPM.toFixed(2))
+            $('#wpm').text(thisRef.WPM.toFixed(2) + ' wpm')
             this.connection.sendWPM(thisRef.WPM)
         }, 1000)
     }
@@ -44,9 +44,6 @@ class Game {
     }
 
     updateTable(data) {
-        const tbody = $('#rank-table-body')
-        tbody.empty()
-
         const results = data.result
         let users = []
 
@@ -58,8 +55,6 @@ class Game {
                 wpm: userWPM
             })
         }
-
-        console.log(users)
 
         users.sort((a, b) => {
             if (a.wpm > b.wpm)
@@ -73,20 +68,7 @@ class Game {
             this.chart = new Chart(users)
         }
 
-        users.push({name: 'boot hunter', wpm: 30})
         this.chart.updateChart(users, this.WPM)
-
-        users.forEach((user, index) => {
-            const trow = $(`
-                <tr>
-                    <th scope="row">${index + 1}</th>
-                    <td>${user.wpm}</td>
-                    <td>${user.name}</td>
-                </tr>
-            `)
-
-            tbody.append(trow)
-        })
     }
 
     get valueChange() {
@@ -226,6 +208,7 @@ $(document).ready(() => {
     const game = new Game(connection)
 
     $('#rank-row').hide()
+    $('#chart-row').hide()
 
     $('#startButton').on('click', () => {
         connection.startMatch()
@@ -253,6 +236,8 @@ $(document).ready(() => {
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
+        $('#players-row').hide()
+        $('#chart-row').show()
         // $('#rank-row').show()
         game.start()
         game.setText(texts.getText())
