@@ -13,10 +13,21 @@
     border-radius: 0.2em;
     border: 0 solid transparent;
     transition: background-color 200ms ease-in-out;
+    font-weight: 500;
     &:hover {
         cursor: pointer;
         background-color: #BBDEFB;
     }
+}
+
+.st-button-lg {
+    min-width: 150px;
+    padding: 15px;
+}
+
+.st-card {
+    border-radius: 0.1em;
+    box-shadow: 0 1rem 8rem rgba( #000, .33);
 }
 
 .ct-chart {
@@ -45,4 +56,32 @@
 .ct-series-a .ct-bar {
     /* Colour of your bars */
     stroke: #6379BD;
+}
+
+.light-text {
+    color: #B3BFE6 !important;
+}
+
+.dark-text {
+    color: #6379BD !important;
+}
+
+.d-light-text {
+    color: lighten($color: #212D5A, $amount: 25) !important;
+}
+
+.d-dark-text {
+    color: #212D5A !important;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+    .res-table {
+        display: block;
+        overflow-x: auto;
+    }
 }

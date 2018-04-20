@@ -2,8 +2,8 @@ const ActionCable = require("actioncable")
 
 class MatchConnection {
     constructor() {
-        const url = 'ws://localhost:3000/'
-        // const url = 'ws://10.186.148.161:3000/'
+        // const url = 'ws://localhost:3000/'
+        const url = 'ws://10.186.151.197:3000/'
         this.cable = ActionCable.createConsumer(url + 'cable')
     }
 
