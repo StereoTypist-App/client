@@ -11650,7 +11650,13 @@ class Game {
 
     end() {
         clearInterval(this.WPMInterval)
+        $('#gameinfo-row').text('Game Done!')
+        $('#gameinfo-row').show()
         this.wordInput.prop('disabled', true)
+    }
+
+    countdown(doneCallback) {
+        doneCallback()
     }
 
     setText(rawText) {
@@ -11847,16 +11853,17 @@ $(document).ready(() => {
     let texts = null
     connection.joinMatch(uid, (data) => {
         texts = new Texts(data.texts)
-        console.log("Match Started")
+        
         $('#promptTitle').text("Type this text:")
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
         $('#players-row').hide()
+        $('#gameinfo-row').hide()
         $('#chart-row').show()
-        // $('#rank-row').show()
-        game.start()
+
         game.setText(texts.getText())
+        game.countdown(() => game.start())
     }, (data) => {
         console.log("Match Done")
         game.updateTable(data)

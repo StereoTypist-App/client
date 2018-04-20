@@ -9,6 +9,7 @@
 .st-button {
     min-width: 100px;
     background-color: #B3BFE6;
+    @extend .d-dark-text;
     padding: 10px;
     border-radius: 0.2em;
     border: 0 solid transparent;
