@@ -11869,7 +11869,6 @@ $(document).ready(() => {
 
 const $ = require('jquery')
 
-
 class Chart {
     constructor(users) {
         this.option = {
@@ -11919,8 +11918,26 @@ const ActionCable = require("actioncable")
 class MatchConnection {
     constructor() {
         // const url = 'ws://localhost:3000/'
-        const url = 'ws://10.186.151.197:3000/'
+        const url = 'ws://10.186.151.180:3000/'
+        console.log(url)
         this.cable = ActionCable.createConsumer(url + 'cable')
+    }
+
+    getMatches(updateCallback) {
+        this.matchmakingChannel = this.cable.subscriptions.create({ channel: "MatchChannel", matchmaking: true }, {
+            connected: () => {
+                console.log("Matchmaking Cable Connected")
+            },
+            disconnected: () => {
+                console.log("Cable Disconnected")
+            },
+            received: (data) => {
+                updateCallback(data)
+            },
+            rejected: () => {
+                console.log("Data Rejected")
+            }
+        })
     }
 
     joinMatch(matchId, startCallback, doneCallback, dataCallback) {

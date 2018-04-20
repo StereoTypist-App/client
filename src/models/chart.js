@@ -1,7 +1,6 @@
 
 const $ = require('jquery')
 
-
 class Chart {
     constructor(users) {
         this.option = {
