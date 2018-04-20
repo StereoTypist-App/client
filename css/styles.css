@@ -15,6 +15,10 @@
     cursor: pointer;
     background-color: #BBDEFB; }
 
+.st-card {
+  border-radius: 0.1em;
+  box-shadow: 0 1rem 8rem rgba(0, 0, 0, 0.33); }
+
 .ct-chart {
   width: 100%;
   height: 450px; }
@@ -37,5 +41,21 @@
 .ct-series-a .ct-bar {
   /* Colour of your bars */
   stroke: #6379BD; }
+
+.light-text {
+  color: #B3BFE6 !important; }
+
+.dark-text {
+  color: #6379BD !important; }
+
+.d-light-text {
+  color: #435cb7 !important; }
+
+.d-dark-text {
+  color: #212D5A !important; }
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto; }
 
 /*# sourceMappingURL=styles.css.map */
