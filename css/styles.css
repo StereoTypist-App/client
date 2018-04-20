@@ -15,4 +15,27 @@
     cursor: pointer;
     background-color: #BBDEFB; }
 
+.ct-chart {
+  width: 100%;
+  height: 450px; }
+
+.ct-label {
+  fill: #B3BFE6 !important;
+  color: #B3BFE6 !important;
+  font-weight: 400;
+  font-size: 15px; }
+
+.ct-grid {
+  fill: #B3BFE6 !important;
+  color: #B3BFE6 !important;
+  stroke: #B3BFE6 !important;
+  font-weight: 400; }
+
+.ct-series .ct-bar {
+  stroke: #abb7db; }
+
+.ct-series-a .ct-bar {
+  /* Colour of your bars */
+  stroke: #6379BD; }
+
 /*# sourceMappingURL=styles.css.map */

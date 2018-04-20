@@ -13,6 +13,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
     <link href="http://52.14.34.73:5120/css/flat.css" rel="stylesheet">
+    <!-- chartist css -->
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
     <!-- Main CSS -->
     <link rel="stylesheet" href="css/styles.css">
     <!-- Custom CSS -->
@@ -92,7 +94,14 @@
                     </div>
                 </div>
 
-                <div class="row mt-4" id="rank-row">
+                <div class="row mt-4 justify-content-center">
+                    <div class="ct-chart white-text"></div>
+                </div>
+
+                <!-- code for chart  -->
+                <!-- end of the code for chart -->
+
+                <div class="row mt-4 hidden" id="rank-row">
                     <div class="col-12">
                         <div class="card">
                             <!--Table-->
@@ -216,6 +225,8 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <!-- MDB core JavaScript -->
         <script type="text/javascript" src="http://52.14.34.73:5120/js/mdb.min.js"></script>
+        <!-- Chartist JavaScript -->
+        <script src="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
         <script src="dist/game.bundle.js"></script>
     </body>

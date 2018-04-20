@@ -11619,6 +11619,7 @@ const shortid = require('shortid')
 const queryString = require('query-string')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
+const Chart = require('./models/chart')
 
 class Game {
     constructor(connection) {
@@ -11627,6 +11628,7 @@ class Game {
         this._wpm = 0
         this.startTime = -1
         this.WPMInterval = -1
+        this.chart = null
         this.connection = connection
         this.textContainer = $('#promptText')
         this.wordInput = $('#typeInput')
@@ -11641,7 +11643,7 @@ class Game {
         // Update WPM
         const thisRef = this
         this.WPMInterval = setInterval(() => {
-            $('#wpm').text(thisRef.WPM.toFixed(2))
+            $('#wpm').text('WPM: ' + thisRef.WPM.toFixed(2))
             this.connection.sendWPM(thisRef.WPM)
         }, 1000)
     }
@@ -11682,6 +11684,13 @@ class Game {
                 return 1
             return 0
         })
+
+        if(!this.chart) {
+            this.chart = new Chart(users)
+        }
+
+        users.push({name: 'boot hunter', wpm: 30})
+        this.chart.updateChart(users, this.WPM)
 
         users.forEach((user, index) => {
             const trow = $(`
@@ -11860,7 +11869,7 @@ $(document).ready(() => {
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
-        $('#rank-row').show()
+        // $('#rank-row').show()
         game.start()
         game.setText(texts.getText())
     }, (data) => {
@@ -11871,13 +11880,61 @@ $(document).ready(() => {
         game.updateTable(data)
     })
 })
-},{"./models/match":17,"./texts":18,"jquery":3,"query-string":4,"shortid":5}],17:[function(require,module,exports){
+},{"./models/chart":17,"./models/match":18,"./texts":19,"jquery":3,"query-string":4,"shortid":5}],17:[function(require,module,exports){
+
+const $ = require('jquery')
+
+
+class Chart {
+    constructor(users) {
+        this.option = {
+            // width: '450px',
+            // height: '450px',
+            // donut: true,
+            // donutWidth: 60,
+            // donutSolid: true,
+            // startAngle: 0,
+            distributeSeries: true
+        }
+        this.series = []
+        // to display the same portion for each user in the beginning
+        users.forEach(user => {
+            this.series.push(1);
+        })
+        this.users = users.map((userObj) => { return userObj.name })
+        this.data = {
+            labels: this.users,
+            series: this.series
+        }
+        this.chart = new Chartist.Bar('.ct-chart', this.data, this.option);
+    }
+
+    updateChart(usersInfo, wpm) {
+        this.newUsers = []
+        this.newSeries = []
+        usersInfo.forEach(userInfo => {
+            this.newUsers.push(userInfo.name);
+            this.newSeries.push(userInfo.wpm);
+        });
+        this.chart.update({
+            labels: this.newUsers,
+            series: this.newSeries
+        })
+        $('#changewpm').text(wpm);
+    }
+}
+
+module.exports = Chart
+
+
+
+},{"jquery":3}],18:[function(require,module,exports){
 const ActionCable = require("actioncable")
 
 class MatchConnection {
     constructor() {
-        // const url = 'ws://localhost:3000/'
-        const url = 'ws://10.186.148.161:3000/'
+        const url = 'ws://localhost:3000/'
+        // const url = 'ws://10.186.148.161:3000/'
         this.cable = ActionCable.createConsumer(url + 'cable')
     }
 
@@ -11918,7 +11975,7 @@ class MatchConnection {
 }
 
 module.exports = MatchConnection
-},{"actioncable":1}],18:[function(require,module,exports){
+},{"actioncable":1}],19:[function(require,module,exports){
 module.exports = class Texts {
     constructor(textArray) {
         this.texts = textArray
