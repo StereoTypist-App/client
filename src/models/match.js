@@ -7,6 +7,23 @@ class MatchConnection {
         this.cable = ActionCable.createConsumer(url + 'cable')
     }
 
+    getMatches(updateCallback) {
+        this.matchmakingChannel = this.cable.subscriptions.create({ channel: "MatchChannel", matchmaking: true }, {
+            connected: () => {
+                console.log("Matchmaking Cable Connected")
+            },
+            disconnected: () => {
+                console.log("Cable Disconnected")
+            },
+            received: (data) => {
+                updateCallback(data)
+            },
+            rejected: () => {
+                console.log("Data Rejected")
+            }
+        })
+    }
+
     joinMatch(matchId, startCallback, doneCallback, dataCallback) {
         this.matchId = matchId
         this.channel = this.cable.subscriptions.create({ channel: "MatchChannel", match_id: matchId }, {
