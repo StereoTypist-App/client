@@ -4,6 +4,10 @@ const $ = require('jquery')
 const connection = new MatchConnection()
 
 $(document).ready(() => {
+    connection.getMatches((data) => {
+        console.log("Matchmaking data",data)
+    })
+
     connection.joinMatch('1234', () => {
         console.log("Match Started")
     }, (data) => {
