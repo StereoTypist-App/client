@@ -1,6 +1,7 @@
 const $ = require('jquery')
 const shortid = require('shortid')
 const queryString = require('query-string')
+const Tone = require('tone')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
 const Chart = require('./models/chart')
@@ -40,18 +41,23 @@ class Game {
     }
 
     countdown(doneCallback) {
+        const synth = new Tone.Synth().toMaster()
         $('#gameinfo-row').show()
         $('#gameinfo').text('Game starting in...')
         setTimeout(() => {
             $('#gameinfo').text('Game starting in 3...')
+            synth.triggerAttackRelease("B4", "12n")
         }, 1000)
         setTimeout(() => {
             $('#gameinfo').text('Game starting in 2...')
+            synth.triggerAttackRelease("B4", "12n")
         }, 2000)
         setTimeout(() => {
             $('#gameinfo').text('Game starting in 1...')
+            synth.triggerAttackRelease("B4", "12n")
         }, 3000)
         setTimeout(() => {
+            synth.triggerAttackRelease("F#5", "4n")
             $('#gameinfo-row').hide()
             doneCallback()
         }, 4000)

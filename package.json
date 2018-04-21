@@ -11,7 +11,8 @@
     "jquery": "^3.3.1",
     "query-string": "^6.0.0",
     "rivets": "^0.9.6",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "tone": "^0.12.80"
   },
   "scripts": {
     "bundle": "watchify js/app.js -o bundle.js"
