@@ -11650,13 +11650,27 @@ class Game {
 
     end() {
         clearInterval(this.WPMInterval)
-        $('#gameinfo-row').text('Game Done!')
+        $('#gameinfo').text('Game Complete')
         $('#gameinfo-row').show()
         this.wordInput.prop('disabled', true)
     }
 
     countdown(doneCallback) {
-        doneCallback()
+        $('#gameinfo-row').show()
+        $('#gameinfo').text('Game starting in...')
+        setTimeout(() => {
+            $('#gameinfo').text('Game starting in 3...')
+        }, 1000)
+        setTimeout(() => {
+            $('#gameinfo').text('Game starting in 2...')
+        }, 2000)
+        setTimeout(() => {
+            $('#gameinfo').text('Game starting in 1...')
+        }, 3000)
+        setTimeout(() => {
+            $('#gameinfo-row').hide()
+            doneCallback()
+        }, 4000)
     }
 
     setText(rawText) {
