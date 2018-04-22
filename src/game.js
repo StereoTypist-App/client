@@ -73,13 +73,25 @@ class Game {
         const results = data.result
         let users = []
 
+        $('#players-tbody').empty()
+        let index = 1
         for (let user in results) {
             if (user === "active") continue
+
+            $('#players-tbody').append(`
+                <tr>
+                    <td class="d-light-text" style="width: 50px">${index}</td>
+                    <td class="text-left d-light-text">${user}</td>
+                </tr>
+            `)
+
             const userWPM = results[user]
             users.push({
                 name: user,
                 wpm: userWPM
             })
+
+            ++index
         }
 
         users.sort((a, b) => {
@@ -273,6 +285,7 @@ $(document).ready(() => {
         game.updateTable(data)
         game.end()
     }, (data) => {
+        console.log(data)
         game.updateTable(data)
     })
 })
