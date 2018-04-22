@@ -1,6 +1,7 @@
 const $ = require('jquery')
 const shortid = require('shortid')
 const queryString = require('query-string')
+const Tone = require('tone')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
 const Chart = require('./models/chart')
@@ -28,13 +29,38 @@ class Game {
         const thisRef = this
         this.WPMInterval = setInterval(() => {
             $('#wpm').text(thisRef.WPM.toFixed(2) + ' wpm')
-            this.connection.sendWPM(thisRef.WPM)
+            this.connection.sendWPM(thisRef.WPM.toFixed(2))
         }, 1000)
     }
 
     end() {
         clearInterval(this.WPMInterval)
+        $('#gameinfo').text('Game Complete')
+        $('#gameinfo-row').show()
         this.wordInput.prop('disabled', true)
+    }
+
+    countdown(doneCallback) {
+        const synth = new Tone.Synth().toMaster()
+        $('#gameinfo-row').show()
+        $('#gameinfo').text('Game starting in...')
+        setTimeout(() => {
+            $('#gameinfo').text('Game starting in 3...')
+            synth.triggerAttackRelease("B4", "12n")
+        }, 1000)
+        setTimeout(() => {
+            $('#gameinfo').text('Game starting in 2...')
+            synth.triggerAttackRelease("B4", "12n")
+        }, 2000)
+        setTimeout(() => {
+            $('#gameinfo').text('Game starting in 1...')
+            synth.triggerAttackRelease("B4", "12n")
+        }, 3000)
+        setTimeout(() => {
+            synth.triggerAttackRelease("F#5", "4n")
+            $('#gameinfo-row').hide()
+            doneCallback()
+        }, 4000)
     }
 
     setText(rawText) {
@@ -231,16 +257,17 @@ $(document).ready(() => {
     let texts = null
     connection.joinMatch(uid, (data) => {
         texts = new Texts(data.texts)
-        console.log("Match Started")
+        
         $('#promptTitle').text("Type this text:")
         $('#startButton').hide()
         $('#gameUrl').hide()
         $('#lobby-row').hide()
         $('#players-row').hide()
+        $('#gameinfo-row').hide()
         $('#chart-row').show()
-        // $('#rank-row').show()
-        game.start()
+
         game.setText(texts.getText())
+        game.countdown(() => game.start())
     }, (data) => {
         console.log("Match Done")
         game.updateTable(data)
