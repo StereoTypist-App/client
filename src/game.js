@@ -5,9 +5,11 @@ const Tone = require('tone')
 const Texts = require('./texts')
 const MatchConnection = require('./models/match')
 const Chart = require('./models/chart')
+const Timer = require('easytimer')
 
 class Game {
     constructor(connection) {
+        this.timer = null
         this.paragraph = null
         this.numCorrect = 0
         this._wpm = 0
@@ -63,6 +65,29 @@ class Game {
         }, 4000)
     }
 
+    startMatchTimer(matchTime) {
+        this.timer = new Timer()
+        this.timer.start({ countdown: true, startValues: { seconds: matchTime } })
+        this.timer.addEventListener('secondsUpdated', (e) => {
+            $('#timeleft').html(`
+                <i class="fa fa-clock prefix"></i>
+                <span>${this.timer.getTimeValues().toString()}</span>
+            `)
+        })
+
+        $('#timeleft').html(`
+            <i class="fa fa-clock prefix"></i>
+            <span>${matchTime}</span>
+        `)
+    }
+
+    endMatchTimer() {
+        $('#timeleft').hide()
+        if(this.timer) {
+            this.timer.stop()
+        }
+    }
+
     setText(rawText) {
         this.paragraph = new Paragraph(rawText)
         this.paragraph.renderTextToElement(this.textContainer)
@@ -102,7 +127,7 @@ class Game {
             return 0
         })
 
-        if(!this.chart) {
+        if (!this.chart) {
             this.chart = new Chart(users)
         }
 
@@ -268,8 +293,9 @@ $(document).ready(() => {
     console.log('UID', uid)
     let texts = null
     connection.joinMatch(uid, (data) => {
+        console.log(data)
         texts = new Texts(data.texts)
-        
+
         $('#promptTitle').text("Type this text:")
         $('#startButton').hide()
         $('#gameUrl').hide()
@@ -279,10 +305,14 @@ $(document).ready(() => {
         $('#chart-row').show()
 
         game.setText(texts.getText())
-        game.countdown(() => game.start())
+        game.countdown(() => {
+            game.start()
+            game.startMatchTimer(data.duration)
+        })
     }, (data) => {
         console.log("Match Done")
         game.updateTable(data)
+        game.endMatchTimer()
         game.end()
     }, (data) => {
         console.log(data)
